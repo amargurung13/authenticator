@@ -1,0 +1,1637 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Authenticity Validator for Academia - Government of Jharkhand</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/4.1.1/tesseract.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 50%, #581c87 100%);
+        }
+        
+        .card-shadow {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.5s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.5s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .progress-bar {
+            transition: width 0.3s ease-in-out;
+        }
+        
+        .notification {
+            transform: translateX(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .modal-backdrop {
+            backdrop-filter: blur(5px);
+        }
+        
+        .hover-scale {
+            transition: transform 0.2s ease-in-out;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+        
+        .glow-effect {
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+        
+        .text-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .sidebar-transition {
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .data-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .verification-steps {
+            position: relative;
+        }
+        
+        .verification-steps::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
+        }
+        
+        .step-indicator {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .certificate-preview {
+            border: 2px dashed #d1d5db;
+            transition: all 0.3s ease;
+        }
+        
+        .certificate-preview.dragover {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+        }
+        
+        .stats-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+<!-- Navigation -->
+<nav class="gradient-bg text-white shadow-2xl sticky top-0 z-50">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="flex justify-between items-center py-4">
+<div class="flex items-center space-x-4">
+<div class="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg">
+<i class="fas fa-graduation-cap text-2xl text-indigo-600"></i>
+</div>
+<div>
+<h1 class="text-2xl font-bold">Authenticity Validator</h1>
+<p class="text-sm opacity-90">Government of Jharkhand - Higher Education Department</p>
+</div>
+</div>
+<div class="flex items-center space-x-4">
+<div class="hidden flex items-center space-x-3 mr-4" id="userInfo">
+<div class="w-10 h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+<i class="fas fa-user text-white"></i>
+</div>
+<div>
+<p class="font-medium text-sm" id="userName"></p>
+<p class="text-xs opacity-75" id="userRole"></p>
+</div>
+</div>
+<button class="bg-white text-indigo-600 px-6 py-2 rounded-lg font-medium hover:bg-gray-100 transition-all duration-200 shadow-lg hover:shadow-xl" id="loginBtn">
+<i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+<button class="border border-white text-white px-6 py-2 rounded-lg font-medium hover:bg-white hover:text-indigo-600 transition-all duration-200" id="registerBtn">
+<i class="fas fa-user-plus mr-2"></i>Register
+                    </button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<div class="hero-gradient text-white py-20" id="heroSection">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="grid lg:grid-cols-2 gap-12 items-center">
+<div class="slide-in-left">
+<h1 class="text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                        Secure Academic
+                        <span class="text-gradient block">Verification System</span>
+</h1>
+<p class="text-xl mb-8 opacity-90 leading-relaxed">
+                        Advanced OCR technology combined with cryptographic validation to ensure the authenticity of academic certificates across Jharkhand's educational institutions.
+                    </p>
+<div class="flex flex-wrap gap-4 mb-8">
+<div class="flex items-center space-x-2">
+<i class="fas fa-shield-alt text-green-400"></i>
+<span>Secure &amp; Tamper-Proof</span>
+</div>
+<div class="flex items-center space-x-2">
+<i class="fas fa-bolt text-yellow-400"></i>
+<span>Instant Verification</span>
+</div>
+<div class="flex items-center space-x-2">
+<i class="fas fa-eye text-blue-400"></i>
+<span>OCR Technology</span>
+</div>
+</div>
+<div class="flex flex-wrap gap-4">
+<button class="bg-white text-indigo-600 px-8 py-4 rounded-xl font-semibold hover:bg-gray-100 transition-all duration-200 shadow-xl hover:shadow-2xl hover-scale" id="heroVerifyBtn">
+<i class="fas fa-search mr-2"></i>Verify Certificate
+                        </button>
+<button class="glass-effect text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:bg-opacity-20 transition-all duration-200" id="heroInstitutionBtn">
+<i class="fas fa-university mr-2"></i>Institution Portal
+                        </button>
+</div>
+</div>
+<div class="slide-in-right">
+<div class="relative">
+<div class="floating">
+<div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg rounded-2xl p-8 shadow-2xl">
+<div class="grid grid-cols-2 gap-6">
+<div class="text-center">
+<div class="text-3xl font-bold text-green-400" id="totalCerts">Loading...</div>
+<div class="text-sm opacity-75">Certificates Verified</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-blue-400">47</div>
+<div class="text-sm opacity-75">Active Institutions</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-purple-400">99.2%</div>
+<div class="text-sm opacity-75">Accuracy Rate</div>
+</div>
+<div class="text-center">
+<div class="text-3xl font-bold text-yellow-400">24/7</div>
+<div class="text-sm opacity-75">System Uptime</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Features Section -->
+<div class="py-20 bg-white" id="featuresSection">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<div class="text-center mb-16">
+<h2 class="text-4xl font-bold text-gray-800 mb-4">Advanced Verification Features</h2>
+<p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                    Our comprehensive system provides multiple layers of security and validation to ensure complete authenticity verification.
+                </p>
+</div>
+<div class="grid lg:grid-cols-3 gap-8">
+<div class="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-2xl card-shadow hover-scale">
+<div class="w-16 h-16 bg-blue-500 rounded-2xl flex items-center justify-center mb-6">
+<i class="fas fa-eye text-2xl text-white"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-gray-800">OCR Technology</h3>
+<p class="text-gray-600 mb-6">Advanced Optical Character Recognition extracts and validates all certificate details with 99%+ accuracy.</p>
+<ul class="space-y-2 text-sm text-gray-600">
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Multi-language support</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Handwritten text recognition</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Image quality enhancement</li>
+</ul>
+</div>
+<div class="bg-gradient-to-br from-green-50 to-emerald-100 p-8 rounded-2xl card-shadow hover-scale">
+<div class="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center mb-6">
+<i class="fas fa-shield-alt text-2xl text-white"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-gray-800">Cryptographic Security</h3>
+<p class="text-gray-600 mb-6">SHA-256 hashing and JWT authentication provide military-grade security for all transactions.</p>
+<ul class="space-y-2 text-sm text-gray-600">
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>End-to-end encryption</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Digital signatures</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Tamper detection</li>
+</ul>
+</div>
+<div class="bg-gradient-to-br from-purple-50 to-violet-100 p-8 rounded-2xl card-shadow hover-scale">
+<div class="w-16 h-16 bg-purple-500 rounded-2xl flex items-center justify-center mb-6">
+<i class="fas fa-database text-2xl text-white"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-gray-800">Centralized Database</h3>
+<p class="text-gray-600 mb-6">Unified database connecting all educational institutions across Jharkhand for instant verification.</p>
+<ul class="space-y-2 text-sm text-gray-600">
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Real-time synchronization</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Backup &amp; recovery</li>
+<li class="flex items-center"><i class="fas fa-check text-green-500 mr-2"></i>Audit trails</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<!-- Login Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden flex items-center justify-center z-50" id="loginModal">
+<div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 card-shadow">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-3xl font-bold text-gray-800">Welcome Back</h3>
+<button class="text-gray-500 hover:text-gray-700 text-2xl" id="closeLoginModal">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<form class="space-y-6" id="loginForm">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">User Type</label>
+<select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="userType">
+<option value="user">User (Verifier/Student)</option>
+<option value="admin">Admin (Institution)</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Email Address</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="loginEmail" placeholder="Enter your email" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Password</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="loginPassword" placeholder="Enter your password" required="" type="password"/>
+</div>
+<button class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl" type="submit">
+<i class="fas fa-sign-in-alt mr-2"></i>Sign In
+                </button>
+<div class="text-center">
+<p class="text-sm text-gray-600 mb-4">
+                        Test credentials: 
+                        <span class="font-medium">admin@edu.gov / admin123</span> or 
+                        <span class="font-medium">ranchi@university.edu / uni123</span>
+</p>
+<p class="text-sm text-gray-600">
+                        Don't have an account? 
+                        <button class="text-indigo-600 hover:text-indigo-700 font-medium" id="switchToRegister" type="button">Create one here</button>
+</p>
+</div>
+</form>
+</div>
+</div>
+<!-- Registration Modal -->
+<div class="fixed inset-0 bg-black bg-opacity-50 modal-backdrop hidden flex items-center justify-center z-50" id="registerModal">
+<div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 card-shadow">
+<div class="flex justify-between items-center mb-8">
+<h3 class="text-3xl font-bold text-gray-800">Create Account</h3>
+<button class="text-gray-500 hover:text-gray-700 text-2xl" id="closeRegisterModal">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<form class="space-y-6" id="registerForm">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">User Type</label>
+<select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="registerUserType" required="">
+<option value="user">User (Verifier/Student)</option>
+<option value="admin">Admin (Institution)</option>
+</select>
+</div>
+<div> <label class="block text-sm font-semibold text-gray-700 mb-3">Full Name</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="registerName" placeholder="Enter your full name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Email Address</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="registerEmail" placeholder="Enter your email" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Password</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="registerPassword" placeholder="Create a password" required="" type="password"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Confirm Password</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="registerConfirmPassword" placeholder="Confirm your password" required="" type="password"/>
+</div>
+<button class="w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl" type="submit">
+<i class="fas fa-user-plus mr-2"></i>Create Account
+                </button>
+<div class="text-center">
+<p class="text-sm text-gray-600">
+                        Already have an account? 
+                        <button class="text-indigo-600 hover:text-indigo-700 font-medium" id="switchToLogin" type="button">Sign in here</button>
+</p>
+</div>
+</form>
+</div>
+</div>
+<!-- Certificate Verification Interface -->
+<div class="hidden min-h-screen bg-gray-50 py-8" id="verificationInterface">
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<!-- Header -->
+<div class="mb-8">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-4xl font-bold text-gray-800 mb-2">Certificate Verification</h1>
+<p class="text-gray-600">Upload and verify academic certificates with advanced OCR technology</p>
+</div>
+<button class="bg-gray-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all" id="backToHome">
+<i class="fas fa-arrow-left mr-2"></i>Back to Home
+                    </button>
+</div>
+</div>
+<div class="grid lg:grid-cols-3 gap-8">
+<!-- Upload Section -->
+<div class="lg:col-span-2">
+<div class="bg-white rounded-2xl card-shadow p-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Upload Certificate</h2>
+<!-- File Upload Area -->
+<div class="certificate-preview border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-indigo-400 transition-all cursor-pointer mb-6" id="dropZone">
+<div class="text-6xl mb-6 text-gray-400">
+<i class="fas fa-cloud-upload-alt"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-700 mb-2">Drop your certificate here</h3>
+<p class="text-gray-500 mb-4">or click to browse files</p>
+<p class="text-sm text-gray-400">Supports PDF, JPG, PNG (Max 10MB)</p>
+<input accept=".pdf,.jpg,.jpeg,.png" class="hidden" id="fileInput" type="file"/>
+</div>
+<!-- Uploaded File Display -->
+<div class="hidden mb-6 p-6 bg-gray-50 rounded-xl border" id="uploadedFile">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+<i class="fas fa-file-alt text-indigo-600 text-xl"></i>
+</div>
+<div>
+<p class="font-semibold text-gray-800" id="fileName"></p>
+<p class="text-sm text-gray-500" id="fileSize"></p>
+</div>
+</div>
+<button class="text-red-500 hover:text-red-700 text-xl" id="removeFile">
+<i class="fas fa-trash"></i>
+</button>
+</div>
+</div>
+<button class="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed" disabled="" id="processBtn">
+<i class="fas fa-cogs mr-2"></i>Process Certificate
+                        </button>
+</div>
+</div>
+<!-- Results Section -->
+<div>
+<div class="bg-white rounded-2xl card-shadow p-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Verification Results</h2>
+<div id="resultsContainer">
+<div class="text-center text-gray-500 py-12">
+<i class="fas fa-search text-6xl mb-6 text-gray-300"></i>
+<h3 class="text-lg font-medium mb-2">No Certificate Uploaded</h3>
+<p class="text-sm">Upload a certificate to see verification results</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Institution Dashboard -->
+<div class="hidden min-h-screen bg-gray-50" id="institutionDashboard">
+<!-- Sidebar -->
+<div class="flex">
+<div class="w-64 bg-white shadow-xl h-screen sticky top-0">
+<div class="p-6 border-b">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-indigo-100 rounded-xl flex items-center justify-center">
+<i class="fas fa-university text-indigo-600"></i>
+</div>
+<div>
+<h3 class="font-bold text-gray-800">Institution Portal</h3>
+<p class="text-xs text-gray-500">Manage Certificates</p>
+</div>
+</div>
+</div>
+<nav class="p-4">
+<ul class="space-y-2">
+<li><a class="flex items-center space-x-3 p-3 rounded-xl bg-indigo-50 text-indigo-600 font-medium" href="#">
+<i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+</a></li>
+<li><a class="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-gray-50" href="#">
+<i class="fas fa-plus-circle"></i><span>Add Certificate</span>
+</a></li>
+<li><a class="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-gray-50" href="#">
+<i class="fas fa-list"></i><span>All Certificates</span>
+</a></li>
+</ul>
+</nav>
+</div>
+<!-- Main Content -->
+<div class="flex-1 p-8">
+<!-- Header -->
+<div class="mb-8">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-4xl font-bold text-gray-800 mb-2">Institution Dashboard</h1>
+<p class="text-gray-600">Manage and monitor your certificate records</p>
+</div>
+<button class="bg-gray-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all" id="backToHomeInst">
+<i class="fas fa-arrow-left mr-2"></i>Back to Home
+                        </button>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid lg:grid-cols-4 gap-6 mb-8">
+<div class="stats-card p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-600 mb-1">Total Certificates</p>
+<p class="text-3xl font-bold text-gray-800" id="instTotalCerts">Loading...</p>
+</div>
+<div class="w-14 h-14 bg-blue-100 rounded-2xl flex items-center justify-center">
+<i class="fas fa-certificate text-blue-600 text-xl"></i>
+</div>
+</div>
+</div>
+<div class="stats-card p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-600 mb-1">Verified Today</p>
+<p class="text-3xl font-bold text-green-600">5</p>
+</div>
+<div class="w-14 h-14 bg-green-100 rounded-2xl flex items-center justify-center">
+<i class="fas fa-check-circle text-green-600 text-xl"></i>
+</div>
+</div>
+</div>
+<div class="stats-card p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-600 mb-1">Pending Upload</p>
+<p class="text-3xl font-bold text-orange-600">2</p>
+</div>
+<div class="w-14 h-14 bg-orange-100 rounded-2xl flex items-center justify-center">
+<i class="fas fa-clock text-orange-600 text-xl"></i>
+</div>
+</div>
+</div>
+<div class="stats-card p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-sm font-medium text-gray-600 mb-1">Success Rate</p>
+<p class="text-3xl font-bold text-purple-600">98.5%</p>
+</div>
+<div class="w-14 h-14 bg-purple-100 rounded-2xl flex items-center justify-center">
+<i class="fas fa-chart-line text-purple-600 text-xl"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Content Grid -->
+<div class="grid lg:grid-cols-3 gap-8">
+<!-- Add Certificate Form -->
+<div class="lg:col-span-2">
+<div class="bg-white rounded-2xl card-shadow p-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Add New Certificate</h2>
+<form class="space-y-6" id="certificateForm">
+<div class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Student Name</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="studentName" placeholder="Enter student name" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Roll Number</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="rollNumber" placeholder="Enter roll number" required="" type="text"/>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Course/Program</label>
+<select class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="course" required="">
+<option value="">Select Course</option>
+<option value="B.Tech Computer Science">B.Tech Computer Science</option>
+<option value="B.Tech Electronics">B.Tech Electronics</option>
+<option value="B.Tech Mechanical">B.Tech Mechanical</option>
+<option value="MBA">MBA</option>
+<option value="M.Tech">M.Tech</option>
+<option value="B.Sc">B.Sc</option>
+<option value="M.Sc">M.Sc</option>
+</select>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Year of Passing</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="yearOfPassing" max="2030" min="2000" placeholder="2024" required="" type="number"/>
+</div>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Certificate ID</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="certificateId" placeholder="CERT001" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Grade/CGPA</label>
+<input class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="grade" placeholder="8.5 CGPA" required="" type="text"/>
+</div>
+<div class="grid md:grid-cols-2 gap-6">
+  <div>
+    <label class="block text-sm font-semibold text-gray-700 mb-3">Date of Issuance</label>
+    <input type="date" id="dateOfIssuance" class="w-full px-4 py-3 border border-gray-300 rounded-xl" required>
+  </div>
+  <div>
+    <label class="block text-sm font-semibold text-gray-700 mb-3">Date of Validity</label>
+    <input type="date" id="dateOfValidity" class="w-full px-4 py-3 border border-gray-300 rounded-xl" required>
+  </div>
+</div>
+
+<div>
+  <label class="block text-sm font-semibold text-gray-700 mb-3">CPD Points</label>
+  <input type="number" id="cpdPoints" class="w-full px-4 py-3 border border-gray-300 rounded-xl" placeholder="8">
+</div>
+
+
+</div>
+<div>
+<label class="block text-sm font-semibold text-gray-700 mb-3">Additional Notes</label>
+<textarea class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all" id="notes" placeholder="Any additional information..." rows="3"></textarea>
+</div>
+<button class="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl" type="submit">
+<i class="fas fa-plus mr-2"></i>Add Certificate Record
+                                </button>
+</form>
+</div>
+</div>
+<!-- Upload & Scan Certificate -->
+<div class="bg-white rounded-2xl card-shadow p-8 mt-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Upload &amp; Scan Certificate</h2>
+<!-- File Upload -->
+<div class="certificate-preview border-2 border-dashed border-gray-300 rounded-2xl p-12 text-center hover:border-indigo-400 transition-all cursor-pointer mb-6" id="instDropZone">
+<div class="text-6xl mb-6 text-gray-400">
+<i class="fas fa-cloud-upload-alt"></i>
+</div>
+<h3 class="text-xl font-semibold text-gray-700 mb-2">Drop certificate file here</h3>
+<p class="text-gray-500 mb-4">or click to browse</p>
+<p class="text-sm text-gray-400">Supports PDF, JPG, PNG (Max 10MB)</p>
+<input accept=".pdf,.jpg,.jpeg,.png" class="hidden" id="instFileInput" type="file"/>
+</div>
+<!-- Uploaded File Display -->
+<div class="hidden mb-6 p-6 bg-gray-50 rounded-xl border" id="instUploadedFile">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-4">
+<div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center">
+<i class="fas fa-file-alt text-indigo-600 text-xl"></i>
+</div>
+<div>
+<p class="font-semibold text-gray-800" id="instFileName"></p>
+<p class="text-sm text-gray-500" id="instFileSize"></p>
+</div>
+</div>
+<button class="text-red-500 hover:text-red-700 text-xl" id="instRemoveFile">
+<i class="fas fa-trash"></i>
+</button>
+</div>
+</div>
+<!-- Process Button -->
+<button class="w-full bg-indigo-600 text-white py-4 rounded-xl font-semibold hover:bg-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:bg-gray-400 disabled:cursor-not-allowed" disabled="" id="instProcessBtn">
+<i class="fas fa-cogs mr-2"></i>Scan &amp; Add to Database
+                        </button>
+</div>
+<!-- Recent Activity -->
+<div>
+<div class="bg-white rounded-2xl card-shadow p-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">Recent Certificates</h2>
+<div class="space-y-4" id="recentRecords">
+<div class="text-center text-gray-500 py-8">
+<i class="fas fa-certificate text-4xl mb-4 text-gray-300"></i>
+<p class="text-sm">Loading certificates...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Admin Dashboard -->
+<div class="hidden min-h-screen bg-gray-50" id="adminDashboard">
+<!-- Admin Sidebar -->
+<div class="flex">
+<div class="w-64 bg-white shadow-xl h-screen sticky top-0">
+<div class="p-6 border-b">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 bg-red-100 rounded-xl flex items-center justify-center">
+<i class="fas fa-shield-alt text-red-600"></i>
+</div>
+<div>
+<h3 class="font-bold text-gray-800">Admin Portal</h3>
+<p class="text-xs text-gray-500">System Management</p>
+</div>
+</div>
+</div>
+<nav class="p-4">
+<ul class="space-y-2">
+<li><a class="flex items-center space-x-3 p-3 rounded-xl bg-red-50 text-red-600 font-medium" href="#">
+<i class="fas fa-tachometer-alt"></i><span>Dashboard</span>
+</a></li>
+<li><a class="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-gray-50" href="#">
+<i class="fas fa-university"></i><span>Institutions</span>
+</a></li>
+<li><a class="flex items-center space-x-3 p-3 rounded-xl text-gray-600 hover:bg-gray-50" href="#">
+<i class="fas fa-users"></i><span>Users</span>
+</a></li>
+</ul>
+</nav>
+</div>
+<!-- Admin Main Content -->
+<div class="flex-1 p-8">
+<!-- Header -->
+<div class="mb-8">
+<div class="flex items-center justify-between">
+<div>
+<h1 class="text-4xl font-bold text-gray-800 mb-2">System Administrator</h1>
+<p class="text-gray-600">Monitor and manage the entire verification system</p>
+</div>
+<button class="bg-gray-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-gray-700 transition-all" id="backToHomeAdmin">
+<i class="fas fa-arrow-left mr-2"></i>Back to Home
+</button>
+<button id="resetDbBtn" 
+    class="bg-red-600 text-white px-6 py-3 rounded-xl font-medium hover:bg-red-700 transition-all ml-4">
+    <i class="fas fa-trash mr-2"></i> Reset Database
+</button>
+
+</div>
+</div>
+<!-- Admin Stats Grid -->
+<div class="grid lg:grid-cols-4 gap-6 mb-8">
+<div class="bg-gradient-to-br from-blue-500 to-blue-600 text-white p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-blue-100 text-sm mb-1">Total Certificates</p>
+<p class="text-3xl font-bold" id="adminTotalCerts">Loading...</p>
+</div>
+<div class="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+<i class="fas fa-certificate text-2xl"></i>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-green-500 to-green-600 text-white p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-green-100 text-sm mb-1">Total Users</p>
+<p class="text-3xl font-bold" id="adminTotalUsers">Loading...</p>
+</div>
+<div class="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+<i class="fas fa-users text-2xl"></i>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-red-500 to-red-600 text-white p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-red-100 text-sm mb-1">Verified Today</p>
+<p class="text-3xl font-bold">23</p>
+</div>
+<div class="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+<i class="fas fa-check-circle text-2xl"></i>
+</div>
+</div>
+</div>
+<div class="bg-gradient-to-br from-purple-500 to-purple-600 text-white p-6 rounded-2xl card-shadow">
+<div class="flex items-center justify-between">
+<div>
+<p class="text-purple-100 text-sm mb-1">System Uptime</p>
+<p class="text-3xl font-bold">99.9%</p>
+</div>
+<div class="w-14 h-14 bg-white bg-opacity-20 rounded-2xl flex items-center justify-center">
+<i class="fas fa-server text-2xl"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Admin Content Grid -->
+<div class="grid lg:grid-cols-2 gap-8">
+<!-- Activity Monitor -->
+<div class="bg-white rounded-2xl card-shadow p-8">
+<div class="flex items-center justify-between mb-6">
+<h2 class="text-2xl font-bold text-gray-800">Real-time Activity</h2>
+<div class="flex items-center space-x-2">
+<div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+<span class="text-sm text-gray-600">Live</span>
+</div>
+</div>
+<div class="space-y-4 max-h-96 overflow-y-auto" id="activityLog">
+<div class="text-center text-gray-500 py-8">
+<i class="fas fa-clock text-4xl mb-4 text-gray-300"></i>
+<p class="text-sm">Loading activity...</p>
+</div>
+</div>
+</div>
+<!-- All Certificates -->
+<div class="bg-white rounded-2xl card-shadow p-8">
+<h2 class="text-2xl font-bold text-gray-800 mb-6">All Certificates</h2>
+<div class="space-y-4 max-h-96 overflow-y-auto" id="allCertificates">
+<div class="text-center text-gray-500 py-8">
+<i class="fas fa-certificate text-4xl mb-4 text-gray-300"></i>
+<p class="text-sm">Loading certificates...</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Notification System -->
+<div class="fixed top-4 right-4 z-50 space-y-2" id="notificationContainer">
+<!-- Notifications will be added here -->
+</div>
+<script>
+        // API Configuration
+        const API_BASE_URL = 'http://localhost:8000';
+        
+        // Global State
+        let currentUser = null;
+        let authToken = null;
+        let uploadedFile = null;
+
+        // DOM Elements
+        const loginBtn = document.getElementById('loginBtn');
+        const registerBtn = document.getElementById('registerBtn');
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        const closeLoginModal = document.getElementById('closeLoginModal');
+        const closeRegisterModal = document.getElementById('closeRegisterModal');
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        const switchToLogin = document.getElementById('switchToLogin');
+        const switchToRegister = document.getElementById('switchToRegister');
+        const heroVerifyBtn = document.getElementById('heroVerifyBtn');
+        const heroInstitutionBtn = document.getElementById('heroInstitutionBtn');
+        const userInfo = document.getElementById('userInfo');
+
+        // Section elements
+        const heroSection = document.getElementById('heroSection');
+        const featuresSection = document.getElementById('featuresSection');
+        const verificationInterface = document.getElementById('verificationInterface');
+        const institutionDashboard = document.getElementById('institutionDashboard');
+        const adminDashboard = document.getElementById('adminDashboard');
+
+        // File upload elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const uploadedFileDiv = document.getElementById('uploadedFile');
+        const processBtn = document.getElementById('processBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+
+        // Navigation buttons
+        const backToHome = document.getElementById('backToHome');
+        const backToHomeInst = document.getElementById('backToHomeInst');
+        const backToHomeAdmin = document.getElementById('backToHomeAdmin');
+
+        // API Functions
+        async function apiCall(endpoint, options = {}) {
+            const url = `${API_BASE_URL}${endpoint}`;
+            const defaultHeaders = {};
+
+            if (authToken) {
+                defaultHeaders['Authorization'] = `Bearer ${authToken}`;
+            }
+
+            // If the body is FormData, don't set Content-Type (browser will do it)
+            const isFormData = options.body instanceof FormData;
+
+            if (!isFormData) {
+                defaultHeaders['Content-Type'] = 'application/json';
+            }
+
+            const finalOptions = {
+                ...options,
+                headers: { ...defaultHeaders, ...(options.headers || {}) }
+            };
+
+            const response = await fetch(url, finalOptions);
+
+            // try JSON, but fallback to text
+            let data;
+            try {
+                data = await response.json();
+            } catch {
+                data = await response.text();
+            }
+
+            if (!response.ok) {
+                throw new Error(data.detail || data || 'API request failed');
+            }
+
+            return data;
+        }
+
+
+        // Authentication Functions
+        async function login(email, password, userType) {
+            try {
+                const data = await apiCall('/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        user_type: userType
+                    })
+                });
+
+                authToken = data.access_token;
+                currentUser = data.user;
+                updateUIForLoggedInUser();
+                showNotification(`Welcome back, ${currentUser.name}!`, 'success');
+                
+                return data;
+            } catch (error) {
+                showNotification('Login failed: ' + error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function register(name, email, password, userType) {
+            try {
+                await apiCall('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password,
+                        user_type: userType
+                    })
+                });
+                
+                showNotification('Registration successful! Please login.', 'success');
+            } catch (error) {
+                showNotification('Registration failed: ' + error.message, 'error');
+                throw error;
+            }
+        }
+
+        // Certificate Functions
+        async function addCertificate(certData) {
+            try {
+                const data = await apiCall('/certificates/add', {
+                    method: 'POST',
+                    body: JSON.stringify(certData)
+                });
+                
+                showNotification('Certificate added successfully!', 'success');
+                loadInstitutionData();
+                return data;
+            } catch (error) {
+                showNotification('Failed to add certificate: ' + error.message, 'error');
+                throw error;
+            }
+        }
+
+        async function getCertificates() {
+            try {
+                return await apiCall('/certificates');
+            } catch (error) {
+                showNotification('Failed to load certificates: ' + error.message, 'error');
+                return [];
+            }
+        }
+
+        async function verifyCertificate(file) {
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const data = await apiCall('/verify/upload', {
+                    method: 'POST',
+                    headers: {
+                        // Remove Content-Type header to let browser set it for FormData
+                        'Authorization': authToken ? `Bearer ${authToken}` : undefined
+                    },
+                    body: formData
+                });
+
+                return data;
+            } catch (error) {
+                showNotification('Verification failed: ' + error.message, 'error');
+                throw error;
+            }
+        }
+
+        // Admin Functions
+        async function getAdminStats() {
+            try {
+                return await apiCall('/admin/stats');
+            } catch (error) {
+                console.error('Failed to load admin stats:', error);
+                return null;
+            }
+        }
+
+        async function getAdminActivity() {
+            try {
+                return await apiCall('/admin/activity');
+            } catch (error) {
+                console.error('Failed to load admin activity:', error);
+                return [];
+            }
+        }
+
+        async function getInstitutionStats() {
+            try {
+                return await apiCall('/institution/stats');
+            } catch (error) {
+                console.error('Failed to load institution stats:', error);
+                return null;
+            }
+        }
+
+        // Notification System
+        function showNotification(message, type = 'info', duration = 5000) {
+            const notification = document.createElement('div');
+            const icons = {
+                success: 'fas fa-check-circle',
+                error: 'fas fa-exclamation-circle',
+                warning: 'fas fa-exclamation-triangle',
+                info: 'fas fa-info-circle'
+            };
+            const colors = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+
+            notification.className = `notification ${colors[type]} text-white p-4 rounded-xl shadow-lg flex items-center space-x-3 max-w-sm`;
+            notification.innerHTML = `
+                <i class="${icons[type]}"></i>
+                <span class="flex-1">${message}</span>
+                <button onclick="this.parentElement.remove()" class="text-white hover:text-gray-200">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+
+            document.getElementById('notificationContainer').appendChild(notification);
+            
+            setTimeout(() => notification.classList.add('show'), 100);
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, duration);
+        }
+
+        // UI Functions
+        function updateUIForLoggedInUser() {
+            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt mr-2"></i>Logout';
+            registerBtn.style.display = 'none';
+            
+            // Show user info
+            userInfo.classList.remove('hidden');
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userRole').textContent = currentUser.user_type.charAt(0).toUpperCase() + currentUser.user_type.slice(1);
+            
+            // Load data based on user type
+            if (currentUser.user_type === 'admin') {
+                showInstitutionDashboard();
+            } else if (currentUser.user_type === 'user') {
+                showVerificationInterface();
+            }
+        }
+
+        function logout() {
+            if (currentUser) {
+                showNotification(`Goodbye, ${currentUser.name}!`, 'info');
+            }
+            currentUser = null;
+            authToken = null;
+            loginBtn.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i>Login';
+            registerBtn.style.display = 'block';
+            userInfo.classList.add('hidden');
+            showWelcomeSection();
+        }
+
+        function showWelcomeSection() {
+            heroSection.classList.remove('hidden');
+            featuresSection.classList.remove('hidden');
+            verificationInterface.classList.add('hidden');
+            institutionDashboard.classList.add('hidden');
+            adminDashboard.classList.add('hidden');
+        }
+
+        function showVerificationInterface() {
+            heroSection.classList.add('hidden');
+            featuresSection.classList.add('hidden');
+            verificationInterface.classList.remove('hidden');
+            institutionDashboard.classList.add('hidden');
+            adminDashboard.classList.add('hidden');
+        }
+
+        function showInstitutionDashboard() {
+            heroSection.classList.add('hidden');
+            featuresSection.classList.add('hidden');
+            verificationInterface.classList.add('hidden');
+            institutionDashboard.classList.remove('hidden');
+            adminDashboard.classList.add('hidden');
+            loadInstitutionData();
+        }
+
+        function showAdminDashboard() {
+            heroSection.classList.add('hidden');
+            featuresSection.classList.add('hidden');
+            verificationInterface.classList.add('hidden');
+            institutionDashboard.classList.add('hidden');
+            adminDashboard.classList.add('hidden');
+        }
+
+        // Data Loading Functions
+        async function loadAdminData() {
+            // Load admin stats
+            const stats = await getAdminStats();
+            if (stats) {
+                document.getElementById('adminTotalCerts').textContent = stats.total_certificates;
+                document.getElementById('adminTotalUsers').textContent = stats.total_users;
+                document.getElementById('totalCerts').textContent = stats.total_certificates;
+            }
+
+            // Load activity log
+            const activities = await getAdminActivity();
+            const activityLog = document.getElementById('activityLog');
+            if (activities && activities.length > 0) {
+                activityLog.innerHTML = activities.map(activity => `
+                    <div class="flex items-start space-x-4 p-4 bg-gray-50 rounded-xl">
+                        <div class="w-4 h-4 bg-blue-500 rounded-full mt-1 flex-shrink-0"></div>
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center justify-between mb-1">
+                                <p class="font-medium text-gray-800 text-sm">${activity.action}</p>
+                                <span class="text-xs text-gray-500">${new Date(activity.timestamp).toLocaleTimeString()}</span>
+                            </div>
+                            <p class="text-xs text-gray-600 mb-1">${activity.user}</p>
+                            <p class="text-xs text-gray-500">${activity.details}</p>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Load all certificates
+            const certificates = await getCertificates();
+            const allCertificates = document.getElementById('allCertificates');
+            if (certificates && certificates.length > 0) {
+                allCertificates.innerHTML = certificates.map(cert => `
+                    <div class="p-4 bg-gray-50 rounded-xl border">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="font-semibold text-gray-800">${cert.student_name}</p>
+                                <p class="text-sm text-gray-600">${cert.course}</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                ${cert.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-gray-500">
+                            <span>${cert.roll_number} | ${cert.institution}</span>
+                            <span>${cert.date_issued}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function loadInstitutionData() {
+            // Load institution stats
+            const stats = await getInstitutionStats();
+            if (stats) {
+                document.getElementById('instTotalCerts').textContent = stats.total_certificates;
+            }
+
+            // Load recent certificates
+            const certificates = await getCertificates();
+            const recentRecords = document.getElementById('recentRecords');
+            if (certificates && certificates.length > 0) {
+                const recent = certificates.slice(-5).reverse();
+                recentRecords.innerHTML = recent.map(record => `
+                    <div class="p-4 bg-gray-50 rounded-xl border">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <p class="font-semibold text-gray-800">${record.student_name}</p>
+                                <p class="text-sm text-gray-600">${record.course}</p>
+                            </div>
+                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                                ${record.status.toUpperCase()}
+                            </span>
+                        </div>
+                        <div class="flex justify-between items-center text-xs text-gray-500">
+                            <span>${record.roll_number}</span>
+                            <span>${record.date_issued}</span>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                recentRecords.innerHTML = `
+                    <div class="text-center text-gray-500 py-8">
+                        <i class="fas fa-certificate text-4xl mb-4 text-gray-300"></i>
+                        <p class="text-sm">No certificates yet</p>
+                    </div>
+                `;
+            }
+        }
+
+        // File Upload Functions
+        function handleFileUpload(file) {
+            const maxSize = 10 * 1024 * 1024; // 10MB
+            const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+            
+            if (file.size > maxSize) {
+                showNotification('File size must be less than 10MB', 'error');
+                return;
+            }
+            
+            if (!allowedTypes.includes(file.type)) {
+                showNotification('Please upload PDF, JPG, or PNG files only', 'error');
+                return;
+            }
+
+            uploadedFile = file;
+            document.getElementById('fileName').textContent = file.name;
+            document.getElementById('fileSize').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+            uploadedFileDiv.classList.remove('hidden');
+            processBtn.disabled = false;
+            
+            showNotification('File uploaded successfully!', 'success');
+        }
+
+        async function processCertificateFile() {
+            if (!uploadedFile) return;
+
+            processBtn.disabled = true;
+            processBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+
+            try {
+                const result = await verifyCertificate(uploadedFile);
+                displayVerificationResults(result);
+            } catch (error) {
+                resultsContainer.innerHTML = `
+                    <div class="text-center text-red-500 py-12">
+                        <i class="fas fa-exclamation-triangle text-6xl mb-6 text-red-300"></i>
+                        <h3 class="text-lg font-medium mb-2">Verification Failed</h3>
+                        <p class="text-sm">${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                processBtn.disabled = false;
+                processBtn.innerHTML = '<i class="fas fa-cogs mr-2"></i>Process Certificate';
+            }
+        }
+
+        function displayVerificationResults(result) {
+            const statusColor = result.is_valid ? 'green' : 'red';
+            const statusIcon = result.is_valid ? 'fas fa-shield-check' : 'fas fa-shield-times';
+            const statusText = result.is_valid ? 'CERTIFICATE AUTHENTIC' : 'CERTIFICATE SUSPICIOUS';
+
+            resultsContainer.innerHTML = `
+                <div class="fade-in space-y-6">
+                    <!-- Main Status -->
+                    <div class="p-8 border-2 border-${statusColor}-200 bg-${statusColor}-50 rounded-2xl">
+                        <div class="text-center">
+                            <div class="w-20 h-20 bg-${statusColor}-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="${statusIcon} text-3xl text-white"></i>
+                            </div>
+                            <h3 class="text-2xl font-bold text-${statusColor}-800 mb-2">${statusText}</h3>
+                            <p class="text-${statusColor}-600 text-lg">Confidence Score: ${result.confidence.toFixed(1)}%</p>
+                            <div class="w-full bg-${statusColor}-200 rounded-full h-3 mt-4">
+                                <div class="bg-${statusColor}-500 h-3 rounded-full transition-all duration-1000" style="width: ${result.confidence}%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Extracted Information -->
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                        <h4 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-file-alt text-indigo-600 mr-2"></i>Extracted Information
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="space-y-3">
+                                ${Object.entries(result.extracted_data).slice(0, 4).map(([key, value]) => `
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-gray-600">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
+                                        <span class="text-gray-800">${value}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            <div class="space-y-3">
+                                ${Object.entries(result.extracted_data).slice(4).map(([key, value]) => `
+                                    <div class="flex justify-between">
+                                        <span class="font-medium text-gray-600">${key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}:</span>
+                                        <span class="text-gray-800">${value}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Validation Checks -->
+                    <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                        <h4 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-tasks text-purple-600 mr-2"></i>Validation Checks
+                        </h4>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            ${Object.entries(result.validation_checks).map(([check, passed]) => `
+                                <div class="flex items-center space-x-3 p-3 rounded-lg ${passed ? 'bg-green-50' : 'bg-red-50'}">
+                                    <i class="fas ${passed ? 'fa-check-circle text-green-500' : 'fa-times-circle text-red-500'}"></i>
+                                    <span class="text-sm font-medium ${passed ? 'text-green-800' : 'text-red-800'}">
+                                        ${check.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()).replace(/_/g, ' ')}
+                                    </span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Matching Record -->
+                    ${result.matching_record ? `
+                        <div class="bg-white border border-gray-200 rounded-2xl p-6">
+                            <h4 class="text-xl font-bold text-gray-800 mb-4">
+                                <i class="fas fa-database text-green-600 mr-2"></i>Matching Database Record
+                            </h4>
+                            <div class="bg-green-50 border border-green-200 rounded-xl p-4">
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="font-semibold text-green-800">${result.matching_record.student_name}</p>
+                                        <p class="text-sm text-green-600">${result.matching_record.course}</p>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="font-semibold text-green-800">${result.matching_record.grade}</p>
+                                        <p class="text-sm text-green-600">${result.matching_record.institution}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+
+            if (result.is_valid) {
+                showNotification('Certificate verified successfully!', 'success');
+            } else {
+                showNotification('Certificate verification failed. Please review the results.', 'error');
+            }
+        }
+
+        // Event Listeners
+        loginBtn.addEventListener('click', () => {
+            if (currentUser) {
+                logout();
+            } else {
+                loginModal.classList.remove('hidden');
+            }
+        });
+
+        closeLoginModal.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+        });
+
+        // Register button event
+        registerBtn.addEventListener('click', () => {
+            registerModal.classList.remove('hidden');
+        });
+
+        closeRegisterModal.addEventListener('click', () => {
+            registerModal.classList.add('hidden');
+        });
+
+        switchToLogin.addEventListener('click', () => {
+            registerModal.classList.add('hidden');
+            loginModal.classList.remove('hidden');
+        });
+
+        switchToRegister.addEventListener('click', () => {
+            loginModal.classList.add('hidden');
+            registerModal.classList.remove('hidden');
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match!', 'error');
+                return;
+            }
+
+            try {
+                await register(name, email, password, document.getElementById('registerUserType').value);
+                registerModal.classList.add('hidden');
+                registerForm.reset();
+                // Optionally show login modal after successful registration
+                setTimeout(() => {
+                    loginModal.classList.remove('hidden');
+                }, 1000);
+            } catch (error) {
+                // Error handling is done in register function
+            }
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userType = document.getElementById('userType').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                await login(email, password, userType);
+                loginModal.classList.add('hidden');
+            } catch (error) {
+                // Error handling is done in login function
+            }
+        });
+
+        heroVerifyBtn.addEventListener('click', () => {
+            showVerificationInterface();
+        });
+
+        heroInstitutionBtn.addEventListener('click', () => {
+            if (currentUser && currentUser.user_type === 'institution') {
+                showInstitutionDashboard();
+            } else {
+                showNotification('Please login as an institution to access this feature.', 'warning');
+            }
+        });
+
+        // Back navigation
+        backToHome.addEventListener('click', showWelcomeSection);
+        backToHomeInst.addEventListener('click', showWelcomeSection);
+        backToHomeAdmin.addEventListener('click', showWelcomeSection);
+
+        // Reset Database (Admin only)
+document.getElementById("resetDbBtn").addEventListener("click", async () => {
+  if (!confirm("⚠️ Are you sure? This will delete all certificates and users!")) return;
+
+  try {
+    await apiCall("/admin/reset", { method: "DELETE" });
+    showNotification("Database reset successfully!", "success");
+    loadAdminData();
+  } catch (error) {
+    showNotification("Reset failed: " + error.message, "error");
+  }
+});
+
+
+        // File upload handling
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileUpload(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileUpload(e.target.files[0]);
+            }
+        });
+
+        document.getElementById('removeFile').addEventListener('click', () => {
+            uploadedFile = null;
+            uploadedFileDiv.classList.add('hidden');
+            processBtn.disabled = true;
+            fileInput.value = '';
+            showNotification('File removed successfully', 'info');
+        });
+
+        processBtn.addEventListener('click', processCertificateFile);
+
+        // Institution form handling
+        document.getElementById('certificateForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const certData = {
+            student_name: document.getElementById('studentName').value,
+            roll_number: document.getElementById('rollNumber').value,
+            course: document.getElementById('course').value,
+            year_of_passing: parseInt(document.getElementById('yearOfPassing').value),
+            certificate_id: document.getElementById('certificateId').value,
+            grade: document.getElementById('grade').value,
+            notes: document.getElementById('notes').value,
+
+            // new fields
+            date_of_issuance: document.getElementById('dateOfIssuance').value,
+            date_of_validity: document.getElementById('dateOfValidity').value,
+            cpd_points: parseInt(document.getElementById('cpdPoints').value) || null
+            };
+
+
+            try {
+                await addCertificate(certData);
+                document.getElementById('certificateForm').reset();
+            } catch (error) {
+                // Error handling is done in addCertificate function
+            }
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.add('hidden');
+            }
+            if (e.target === registerModal) {
+                registerModal.classList.add('hidden');
+            }
+        });
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', async () => {
+            showWelcomeSection();
+            
+            // Check if backend is available and load initial data
+            try {
+                const stats = await apiCall('/admin/stats');
+                document.getElementById('totalCerts').textContent = stats?.total_certificates || '0';
+            } catch (error) {
+                console.log('Backend not available, using mock data');
+                document.getElementById('totalCerts').textContent = '5,432';
+                showNotification('Backend server not connected. Please start the FastAPI server.', 'warning', 8000);
+
+                
+            }
+        });
+    
+
+// Institution File Upload Handling
+const instDropZone = document.getElementById('instDropZone');
+const instFileInput = document.getElementById('instFileInput');
+const instUploadedFileDiv = document.getElementById('instUploadedFile');
+const instProcessBtn = document.getElementById('instProcessBtn');
+const instFileName = document.getElementById('instFileName');
+const instFileSize = document.getElementById('instFileSize');
+const instRemoveFile = document.getElementById('instRemoveFile');
+let instUploadedFile = null;
+
+instDropZone.addEventListener('click', () => instFileInput.click());
+
+instDropZone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    instDropZone.classList.add('dragover');
+});
+
+instDropZone.addEventListener('dragleave', () => {
+    instDropZone.classList.remove('dragover');
+});
+
+instDropZone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    instDropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length > 0) {
+        handleInstFileUpload(e.dataTransfer.files[0]);
+    }
+});
+
+instFileInput.addEventListener('change', (e) => {
+    if (e.target.files.length > 0) {
+        handleInstFileUpload(e.target.files[0]);
+    }
+});
+
+instRemoveFile.addEventListener('click', () => {
+    instUploadedFile = null;
+    instUploadedFileDiv.classList.add('hidden');
+    instProcessBtn.disabled = true;
+    instFileInput.value = '';
+    showNotification('File removed', 'info');
+});
+
+function handleInstFileUpload(file) {
+    const maxSize = 10 * 1024 * 1024;
+    const allowedTypes = ['application/pdf', 'image/jpeg', 'image/png', 'image/jpg'];
+    
+    if (file.size > maxSize) {
+        showNotification('File must be under 10MB', 'error');
+        return;
+    }
+    if (!allowedTypes.includes(file.type)) {
+        showNotification('Only PDF/JPG/PNG allowed', 'error');
+        return;
+    }
+
+    instUploadedFile = file;
+    instFileName.textContent = file.name;
+    instFileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+    instUploadedFileDiv.classList.remove('hidden');
+    instProcessBtn.disabled = false;
+}
+
+instProcessBtn.addEventListener('click', async () => {
+    if (!instUploadedFile) return;
+    instProcessBtn.disabled = true;
+    instProcessBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Processing...';
+
+    try {
+        const formData = new FormData();
+        formData.append('file', instUploadedFile);
+
+        const result = await apiCall('/certificates/upload', {
+            method: 'POST',
+            headers: { 'Authorization': authToken ? `Bearer ${authToken}` : undefined },
+            body: formData
+        });
+
+        showNotification('Certificate scanned and added to DB!', 'success');
+        loadInstitutionData();
+    } catch (error) {
+        showNotification('Failed to process: ' + error.message, 'error');
+    } finally {
+        instProcessBtn.disabled = false;
+        instProcessBtn.innerHTML = '<i class="fas fa-cogs mr-2"></i>Scan & Add to Database';
+    }
+});
+</script>
+</body>
+</html>
